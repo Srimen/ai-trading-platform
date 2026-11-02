@@ -1,5 +1,7 @@
 # AI Trading Platform
 
+![CI](https://github.com/Srimen/ai-trading-platform/actions/workflows/ci.yml/badge.svg)
+
 A web app for researching stocks, understanding portfolio risk, and placing **paper** (simulated) trades, with AI explanations that cite their sources.
 
 > **Paper trading only.** This project never places real orders or uses real money. Test data is always labeled as test data. Not financial advice.
@@ -22,6 +24,7 @@ The goal is one complete, working journey:
 - [x] Next.js + TypeScript + Tailwind setup
 - [x] Dashboard with a clear PAPER label
 - [x] Watchlist with fresh, stale, and unavailable price states
+- [x] Automated tests and CI on every push
 - [ ] Sign-in and per-user data isolation
 - [ ] CSV portfolio import with row-by-row validation
 - [ ] Portfolio valuation and risk scenarios (decimal math, reproducible)
@@ -39,7 +42,7 @@ The goal is one complete, working journey:
 
 ## Tech stack
 
-- **Built with:** Next.js (App Router), TypeScript, Tailwind CSS
+- **Built with:** Next.js (App Router), TypeScript, Tailwind CSS, Vitest, GitHub Actions
 - **Planned:** PostgreSQL, authentication, a market data provider, a paper-broker sandbox, Vercel hosting
 
 ## Getting started
@@ -53,6 +56,16 @@ npm run dev
 ```
 
 Then open http://localhost:3000.
+
+## Running checks
+
+```bash
+npm test        # unit tests
+npm run lint    # code style
+npm run build   # production build
+```
+
+These also run automatically on GitHub for every push.
 
 ## Project structure
 
@@ -72,5 +85,5 @@ docs/         Scope and architecture notes
 | 5–6 | AI explanations and paper orders |
 | 7–8 | Testing, failure handling, Vercel deployment, demo |
 
-See [docs/scope.md](docs/scope.md) and [docs/architecture.md](docs/architecture.md) for details. 
+See [docs/scope.md](docs/scope.md) and [docs/architecture.md](docs/architecture.md) for details.
 
