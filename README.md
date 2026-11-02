@@ -20,8 +20,8 @@ The goal is one complete, working journey:
 ## Features
 
 - [x] Next.js + TypeScript + Tailwind setup
-- [ ] Dashboard with a clear PAPER label
-- [ ] Watchlist with fresh, stale, and unavailable price states
+- [x] Dashboard with a clear PAPER label
+- [x] Watchlist with fresh, stale, and unavailable price states
 - [ ] Sign-in and per-user data isolation
 - [ ] CSV portfolio import with row-by-row validation
 - [ ] Portfolio valuation and risk scenarios (decimal math, reproducible)

@@ -1,4 +1,5 @@
 import Card from "@/components/Card";
+import Watchlist from "@/components/Watchlist";
 
 export default function Dashboard() {
   return (
@@ -11,8 +12,8 @@ export default function Dashboard() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <Card title="Watchlist">
-          <p className="text-sm text-muted">Market data will appear here.</p>
+        <Card title="Watchlist" className="md:col-span-2">
+          <Watchlist />
         </Card>
         <Card title="Portfolio">
           <p className="text-sm text-muted">
@@ -24,7 +25,7 @@ export default function Dashboard() {
             No explanations yet. Each one will link to its sources.
           </p>
         </Card>
-        <Card title="Paper orders">
+        <Card title="Paper orders" className="md:col-span-2">
           <p className="text-sm text-muted">
             No paper orders yet. Every order will need your confirmation.
           </p>
