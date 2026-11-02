@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans } from "next/font/google";
+import Header from "@/components/Header";
 import "./globals.css";
 
 const plexSans = IBM_Plex_Sans({
@@ -19,7 +20,10 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={plexSans.variable}>
-      <body className="min-h-screen font-sans antialiased">{children}</body>
+      <body className="min-h-screen font-sans antialiased">
+        <Header />
+        <main className="mx-auto max-w-6xl px-6 py-8">{children}</main>
+      </body>
     </html>
   );
 }

@@ -1,11 +1,36 @@
-export default function Home() {
+import Card from "@/components/Card";
+
+export default function Dashboard() {
   return (
-    <main className="flex min-h-screen items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-3xl font-semibold">AI Trading Platform</h1>
-        <p className="mt-2 text-muted">Paper-trading prototype. Setup in progress.</p>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold">Dashboard</h1>
+        <p className="mt-1 text-sm text-muted">
+          Paper trading only. No real money and no live orders.
+        </p>
       </div>
-    </main>
+
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card title="Watchlist">
+          <p className="text-sm text-muted">Market data will appear here.</p>
+        </Card>
+        <Card title="Portfolio">
+          <p className="text-sm text-muted">
+            No holdings yet. You&apos;ll be able to import a CSV file here.
+          </p>
+        </Card>
+        <Card title="AI explanations">
+          <p className="text-sm text-muted">
+            No explanations yet. Each one will link to its sources.
+          </p>
+        </Card>
+        <Card title="Paper orders">
+          <p className="text-sm text-muted">
+            No paper orders yet. Every order will need your confirmation.
+          </p>
+        </Card>
+      </div>
+    </div>
   );
 }
 
