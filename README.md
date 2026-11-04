@@ -25,7 +25,8 @@ The goal is one complete, working journey:
 - [x] Dashboard with a clear PAPER label
 - [x] Watchlist with fresh, stale, and unavailable price states
 - [x] Automated tests and CI on every push
-- [ ] Sign-in and per-user data isolation
+- [x] Email sign-in with Supabase Auth, with every page protected
+- [ ] Per-user data isolation with row-level security
 - [ ] CSV portfolio import with row-by-row validation
 - [ ] Portfolio valuation and risk scenarios (decimal math, reproducible)
 - [ ] AI explanations with citations and uncertainty
@@ -42,20 +43,29 @@ The goal is one complete, working journey:
 
 ## Tech stack
 
-- **Built with:** Next.js (App Router), TypeScript, Tailwind CSS, Vitest, GitHub Actions
-- **Planned:** PostgreSQL, authentication, a market data provider, a paper-broker sandbox, Vercel hosting
+- **Built with:** Next.js (App Router), TypeScript, Tailwind CSS, Supabase Auth, Vitest, GitHub Actions
+- **Planned:** PostgreSQL (Supabase) with row-level security, a market data provider, a paper-broker sandbox, Vercel hosting
 
 ## Getting started
+
+1. Create a free project at [supabase.com](https://supabase.com).
+2. Clone the repo and install dependencies:
 
 ```bash
 git clone https://github.com/Srimen/ai-trading-platform.git
 cd ai-trading-platform
 npm install
 cp .env.example .env.local
+```
+
+3. In `.env.local`, fill in `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` from your Supabase project's **Connect** dialog.
+4. Start the app:
+
+```bash
 npm run dev
 ```
 
-Then open http://localhost:3000.
+Then open http://localhost:3000 and create an account.
 
 ## Running checks
 
@@ -70,10 +80,11 @@ These also run automatically on GitHub for every push.
 ## Project structure
 
 ```
-app/          Pages and API routes
+app/          Pages, API routes, and server actions
 components/   UI components
-lib/          Types, config, and market data adapters
+lib/          Types, config, Supabase clients, and market data adapters
 docs/         Scope and architecture notes
+proxy.ts      Refreshes sessions and protects every page
 ```
 
 ## Roadmap

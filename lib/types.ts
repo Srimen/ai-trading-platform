@@ -76,3 +76,8 @@ export interface OrderEvent {
   note?: string;
 }
 
+// What the login form gets back after a sign-in or sign-up attempt
+export interface AuthState {
+  error: string | null;
+  message: string | null;
+}
