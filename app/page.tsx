@@ -1,4 +1,6 @@
+import { Suspense } from "react";
 import Card from "@/components/Card";
+import HoldingsList from "@/components/HoldingsList";
 import Watchlist from "@/components/Watchlist";
 
 export default function Dashboard() {
@@ -16,9 +18,9 @@ export default function Dashboard() {
           <Watchlist />
         </Card>
         <Card title="Portfolio">
-          <p className="text-sm text-muted">
-            No holdings yet. You&apos;ll be able to import a CSV file here.
-          </p>
+          <Suspense fallback={<p className="text-sm text-muted">Loading holdings…</p>}>
+            <HoldingsList />
+          </Suspense>
         </Card>
         <Card title="AI explanations">
           <p className="text-sm text-muted">

@@ -26,7 +26,7 @@ The goal is one complete, working journey:
 - [x] Watchlist with fresh, stale, and unavailable price states
 - [x] Automated tests and CI on every push
 - [x] Email sign-in with Supabase Auth, with every page protected
-- [ ] Per-user data isolation with row-level security
+- [x] Per-user data isolation with row-level security ([how it's tested](docs/isolation-check.md))
 - [ ] CSV portfolio import with row-by-row validation
 - [ ] Portfolio valuation and risk scenarios (decimal math, reproducible)
 - [ ] AI explanations with citations and uncertainty
@@ -38,18 +38,20 @@ The goal is one complete, working journey:
 - **Paper only.** Every account and order screen says PAPER.
 - **No hidden staleness.** Every price shows where it came from and when. Old or missing data is clearly marked.
 - **Reproducible numbers.** Calculations use decimal math and record their inputs.
+- **Private by default.** The database itself makes sure each user can only see their own data.
 - **The AI explains, it never trades.** Orders always need explicit confirmation from the user.
 - **No secrets in code.** API keys live in environment variables only.
 
 ## Tech stack
 
-- **Built with:** Next.js (App Router), TypeScript, Tailwind CSS, Supabase Auth, Vitest, GitHub Actions
-- **Planned:** PostgreSQL (Supabase) with row-level security, a market data provider, a paper-broker sandbox, Vercel hosting
+- **Built with:** Next.js (App Router), TypeScript, Tailwind CSS, Supabase (Auth and PostgreSQL with row-level security), Vitest, GitHub Actions
+- **Planned:** a market data provider, a paper-broker sandbox, Vercel hosting
 
 ## Getting started
 
 1. Create a free project at [supabase.com](https://supabase.com).
-2. Clone the repo and install dependencies:
+2. In the Supabase **SQL Editor**, run the files in `supabase/migrations/` in order.
+3. Clone the repo and install dependencies:
 
 ```bash
 git clone https://github.com/Srimen/ai-trading-platform.git
@@ -58,8 +60,8 @@ npm install
 cp .env.example .env.local
 ```
 
-3. In `.env.local`, fill in `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` from your Supabase project's **Connect** dialog.
-4. Start the app:
+4. In `.env.local`, fill in `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` from your Supabase project's **Connect** dialog.
+5. Start the app:
 
 ```bash
 npm run dev
@@ -80,11 +82,12 @@ These also run automatically on GitHub for every push.
 ## Project structure
 
 ```
-app/          Pages, API routes, and server actions
-components/   UI components
-lib/          Types, config, Supabase clients, and market data adapters
-docs/         Scope and architecture notes
-proxy.ts      Refreshes sessions and protects every page
+app/                   Pages, API routes, and server actions
+components/            UI components
+lib/                   Types, config, Supabase clients, data access, and market data adapters
+supabase/migrations/   Database tables and row-level security policies
+docs/                  Scope, architecture, and security checks
+proxy.ts               Refreshes sessions and protects every page
 ```
 
 ## Roadmap
