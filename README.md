@@ -6,7 +6,7 @@ A web app for researching stocks, understanding portfolio risk, and placing **pa
 
 > **Paper trading only.** This project never places real orders or uses real money. Test data is always labeled as test data. Not financial advice.
 
-**Status:** In progress. Currently building risk calculations: allocation, concentration, and price-shock scenarios.
+**Status:** In progress. Next up: real market data and a paper-broker sandbox.
 
 ## What it does
 
@@ -28,8 +28,9 @@ The goal is one complete, working journey:
 - [x] Email sign-in with Supabase Auth, with every page protected
 - [x] Per-user data isolation with row-level security ([how it's tested](docs/isolation-check.md))
 - [x] CSV portfolio import with row-by-row validation
-- [x] Portfolio valuation and unrealized P/L with exact decimal math ([formulas and reference portfolio](docs/calculations.md))
-- [ ] Risk: allocation, concentration, and price-shock scenarios
+- [x] Portfolio valuation and unrealized P/L with exact decimal math
+- [x] Risk: allocation, concentration, and price-shock scenarios ([formulas and reference portfolio](docs/calculations.md))
+- [ ] Real market data and a paper-broker sandbox
 - [ ] AI explanations with citations and uncertainty
 - [ ] Paper orders with explicit confirmation and duplicate prevention
 - [ ] Deployed on Vercel
@@ -50,12 +51,24 @@ MSFT,5,1800.00
 - **Validation:** every invalid row is reported with its row number and how to fix it.
 - **All or nothing:** if any row is invalid, nothing is imported. A valid import replaces your current holdings in a single database transaction.
 
-## How valuation works
+## How the numbers work
+
+**Valuation**
 
 - **Market value** = quantity × price, rounded half-up to cents. **Unrealized P/L** = market value − cost basis.
-- All math uses exact decimals (`decimal.js`), never JavaScript floating-point numbers.
 - Positions with **no price** are left out of the totals and named in a warning. **Stale prices** are used but flagged.
+
+**Risk**
+
+- **Allocation** shows each position's share of the portfolio.
+- **Concentration** flags the largest position when it's more than 25% of the portfolio (a common rule of thumb).
+- **Price-shock scenarios** show what the portfolio would be worth if all prices fell 20% or 10%, rose 10%, or if the largest position fell 30%.
+
+**For every calculation**
+
+- All math uses exact decimals (`decimal.js`), never JavaScript floating-point numbers.
 - Every result shows when it was calculated and which formula version was used, so the numbers can be reproduced.
+- The Portfolio and Risk panels share one calculation per page load, so they always agree.
 - The code is tested against a [hand-calculated reference portfolio](docs/calculations.md).
 
 ## Design principles

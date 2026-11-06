@@ -1,30 +1,6 @@
 import { connection } from "next/server";
+import { formatUtc, pnlClass, signed, withCommas } from "@/lib/format";
 import { getPortfolioValuation } from "@/lib/portfolio/get-valuation";
-
-// Adds thousands separators to a decimal string without converting it to a number
-function withCommas(value: string) {
-  const negative = value.startsWith("-");
-  const [whole, fraction] = value.replace("-", "").split(".");
-  const grouped = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  return `${negative ? "-" : ""}${grouped}${fraction ? `.${fraction}` : ""}`;
-}
-
-function isZero(value: string) {
-  return /^-?0(\.0+)?$/.test(value);
-}
-
-function signed(value: string) {
-  return value.startsWith("-") || isZero(value) ? withCommas(value) : `+${withCommas(value)}`;
-}
-
-function pnlClass(value: string | null) {
-  if (!value || isZero(value)) return "text-muted";
-  return value.startsWith("-") ? "text-danger" : "text-fresh";
-}
-
-function formatUtc(iso: string) {
-  return `${iso.slice(0, 10)} at ${iso.slice(11, 19)} UTC`;
-}
 
 export default async function HoldingsList() {
   // Holdings and prices are different for every user and every moment

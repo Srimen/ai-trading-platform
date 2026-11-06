@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import Card from "@/components/Card";
 import HoldingsList from "@/components/HoldingsList";
 import ImportHoldingsForm from "@/components/ImportHoldingsForm";
+import RiskPanel from "@/components/RiskPanel";
 import Watchlist from "@/components/Watchlist";
 
 export default function Dashboard() {
@@ -23,6 +24,11 @@ export default function Dashboard() {
             <HoldingsList />
           </Suspense>
           <ImportHoldingsForm />
+        </Card>
+        <Card title="Risk" className="md:col-span-2">
+          <Suspense fallback={<p className="text-sm text-muted">Calculating risk…</p>}>
+            <RiskPanel />
+          </Suspense>
         </Card>
         <Card title="AI explanations">
           <p className="text-sm text-muted">
