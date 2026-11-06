@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { getHoldings } from "@/lib/holdings";
-import { fixtureAdapter } from "@/lib/market/fixture-adapter";
+import { getMarketDataAdapter } from "@/lib/market";
 import { getQuoteStatus } from "@/lib/market/staleness";
 import { valuePortfolio, type PriceInput, type PortfolioValuation } from "./valuation";
 
@@ -9,16 +9,18 @@ import { valuePortfolio, type PriceInput, type PortfolioValuation } from "./valu
 // cache() runs this once per page load, so every panel uses the exact same numbers.
 export const getPortfolioValuation = cache(async (): Promise<PortfolioValuation> => {
   const holdings = await getHoldings();
-  const now = new Date();
+  const adapter = getMarketDataAdapter();
 
   const entries = await Promise.all(
-    holdings.map(async (holding) => {
-      const quote = await fixtureAdapter.getQuote(holding.symbol);
-      const { status } = getQuoteStatus(quote, now);
-      return [holding.symbol, { quote, status }] as const;
-    })
+    holdings.map(async (holding) => [holding.symbol, await adapter.getQuote(holding.symbol)] as const)
   );
 
-  const prices: Record<string, PriceInput> = Object.fromEntries(entries);
+  // Check staleness after all prices arrive, against one shared moment
+  const now = new Date();
+  const prices: Record<string, PriceInput> = Object.fromEntries(
+    entries.map(([symbol, quote]) => [symbol, { quote, status: getQuoteStatus(quote, now).status }])
+  );
+
   return valuePortfolio(holdings, prices, now);
-});
+}); 
+

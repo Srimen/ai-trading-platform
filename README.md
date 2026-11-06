@@ -6,7 +6,7 @@ A web app for researching stocks, understanding portfolio risk, and placing **pa
 
 > **Paper trading only.** This project never places real orders or uses real money. Test data is always labeled as test data. Not financial advice.
 
-**Status:** In progress. Next up: real market data and a paper-broker sandbox.
+**Status:** In progress. Next up: connecting the paper-broker sandbox.
 
 ## What it does
 
@@ -30,10 +30,18 @@ The goal is one complete, working journey:
 - [x] CSV portfolio import with row-by-row validation
 - [x] Portfolio valuation and unrealized P/L with exact decimal math
 - [x] Risk: allocation, concentration, and price-shock scenarios ([formulas and reference portfolio](docs/calculations.md))
-- [ ] Real market data and a paper-broker sandbox
+- [x] Real market data from Alpaca (IEX), with labeled test data as a fallback
+- [ ] Paper-broker sandbox account
 - [ ] AI explanations with citations and uncertainty
 - [ ] Paper orders with explicit confirmation and duplicate prevention
 - [ ] Deployed on Vercel
+
+## Market data
+
+- With Alpaca keys set, prices come from **Alpaca's free IEX feed**. Each price shows its source and the time of the actual trade.
+- Outside US market hours, prices are correctly shown as **stale**, because the last trade really is old.
+- If a price can't be loaded (a bad key, a timeout, an unknown symbol), only that symbol shows as **unavailable**. The rest of the page keeps working.
+- Without keys, the app uses **labeled test fixtures**, so tests and CI never need real credentials.
 
 ## Importing a portfolio
 
@@ -78,18 +86,19 @@ MSFT,5,1800.00
 - **Reproducible numbers.** Calculations use decimal math and record their inputs and formula version.
 - **Private by default.** The database itself makes sure each user can only see their own data.
 - **The AI explains, it never trades.** Orders always need explicit confirmation from the user.
-- **No secrets in code.** API keys live in environment variables only.
+- **No secrets in code.** API keys live in environment variables only, and broker keys never reach the browser.
 
 ## Tech stack
 
-- **Built with:** Next.js (App Router), TypeScript, Tailwind CSS, Supabase (Auth and PostgreSQL with row-level security), decimal.js, Vitest, GitHub Actions
-- **Planned:** a market data provider, a paper-broker sandbox, Vercel hosting
+- **Built with:** Next.js (App Router), TypeScript, Tailwind CSS, Supabase (Auth and PostgreSQL with row-level security), Alpaca Market Data API, decimal.js, Vitest, GitHub Actions
+- **Planned:** Alpaca paper-trading API, Vercel hosting
 
 ## Getting started
 
 1. Create a free project at [supabase.com](https://supabase.com).
 2. In the Supabase **SQL Editor**, run the files in `supabase/migrations/` in order.
-3. Clone the repo and install dependencies:
+3. Optional: create a free paper-only account at [alpaca.markets](https://alpaca.markets) and generate paper API keys for real prices.
+4. Clone the repo and install dependencies:
 
 ```bash
 git clone https://github.com/Srimen/ai-trading-platform.git
@@ -98,8 +107,10 @@ npm install
 cp .env.example .env.local
 ```
 
-4. In `.env.local`, fill in `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` from your Supabase project's **Connect** dialog.
-5. Start the app:
+5. In `.env.local`, fill in:
+   - `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` from your Supabase project's **Connect** dialog
+   - `ALPACA_API_KEY_ID` and `ALPACA_API_SECRET_KEY` from your Alpaca paper account (leave them empty to use test prices)
+6. Start the app:
 
 ```bash
 npm run dev
@@ -115,7 +126,7 @@ npm run lint    # code style
 npm run build   # production build
 ```
 
-These also run automatically on GitHub for every push.
+These also run automatically on GitHub for every push. Tests never call real APIs.
 
 ## Project structure
 

@@ -79,8 +79,8 @@ export default async function RiskPanel() {
               <thead className="text-left text-muted">
                 <tr>
                   <th className="py-2 font-normal">Scenario</th>
-                  <th className="py-2 text-right font-normal">Value after</th>
-                  <th className="py-2 text-right font-normal">Change</th>
+                  <th className="whitespace-nowrap py-2 pl-4 text-right font-normal">Value after</th>
+                  <th className="whitespace-nowrap py-2 pl-4 text-right font-normal">Change</th>
                 </tr>
               </thead>
               <tbody>
@@ -92,8 +92,12 @@ export default async function RiskPanel() {
                         <span className="text-muted"> ({scenario.affectedSymbols.join(", ")})</span>
                       )}
                     </td>
-                    <td className="py-2 text-right tabular-nums">{withCommas(scenario.valueAfter)}</td>
-                    <td className={`py-2 text-right tabular-nums ${pnlClass(scenario.change)}`}>
+                    <td className="whitespace-nowrap py-2 pl-4 text-right tabular-nums">
+                      {withCommas(scenario.valueAfter)}
+                    </td>
+                    <td
+                      className={`whitespace-nowrap py-2 pl-4 text-right tabular-nums ${pnlClass(scenario.change)}`}
+                    >
                       {signed(scenario.change)}
                       {scenario.changePercent && (
                         <span className="ml-1 text-xs">({signed(scenario.changePercent)}%)</span>

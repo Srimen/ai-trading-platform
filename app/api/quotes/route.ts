@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { fixtureAdapter } from "@/lib/market/fixture-adapter";
+import { getMarketDataAdapter } from "@/lib/market";
 import { getQuoteStatus } from "@/lib/market/staleness";
 import type { WatchlistItem } from "@/lib/types";
 
@@ -28,16 +28,17 @@ export async function GET(request: Request) {
     );
   }
 
+  const adapter = getMarketDataAdapter();
   const items: WatchlistItem[] = await Promise.all(
     symbols.map(async (symbol) => {
-      const quote = await fixtureAdapter.getQuote(symbol);
+      const quote = await adapter.getQuote(symbol);
       return { symbol, quote, ...getQuoteStatus(quote) };
     })
   );
 
   return NextResponse.json({
     items,
-    source: fixtureAdapter.name,
+    source: adapter.name,
     generatedAt: new Date().toISOString(),
   });
 }
