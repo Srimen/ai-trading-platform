@@ -6,7 +6,7 @@ A web app for researching stocks, understanding portfolio risk, and placing **pa
 
 > **Paper trading only.** This project never places real orders or uses real money. Test data is always labeled as test data. Not financial advice.
 
-**Status:** In progress. Currently building portfolio valuation and risk calculations.
+**Status:** In progress. Currently building risk calculations: allocation, concentration, and price-shock scenarios.
 
 ## What it does
 
@@ -28,7 +28,8 @@ The goal is one complete, working journey:
 - [x] Email sign-in with Supabase Auth, with every page protected
 - [x] Per-user data isolation with row-level security ([how it's tested](docs/isolation-check.md))
 - [x] CSV portfolio import with row-by-row validation
-- [ ] Portfolio valuation and risk scenarios (decimal math, reproducible)
+- [x] Portfolio valuation and unrealized P/L with exact decimal math ([formulas and reference portfolio](docs/calculations.md))
+- [ ] Risk: allocation, concentration, and price-shock scenarios
 - [ ] AI explanations with citations and uncertainty
 - [ ] Paper orders with explicit confirmation and duplicate prevention
 - [ ] Deployed on Vercel
@@ -49,18 +50,26 @@ MSFT,5,1800.00
 - **Validation:** every invalid row is reported with its row number and how to fix it.
 - **All or nothing:** if any row is invalid, nothing is imported. A valid import replaces your current holdings in a single database transaction.
 
+## How valuation works
+
+- **Market value** = quantity × price, rounded half-up to cents. **Unrealized P/L** = market value − cost basis.
+- All math uses exact decimals (`decimal.js`), never JavaScript floating-point numbers.
+- Positions with **no price** are left out of the totals and named in a warning. **Stale prices** are used but flagged.
+- Every result shows when it was calculated and which formula version was used, so the numbers can be reproduced.
+- The code is tested against a [hand-calculated reference portfolio](docs/calculations.md).
+
 ## Design principles
 
 - **Paper only.** Every account and order screen says PAPER.
 - **No hidden staleness.** Every price shows where it came from and when. Old or missing data is clearly marked.
-- **Reproducible numbers.** Calculations use decimal math and record their inputs.
+- **Reproducible numbers.** Calculations use decimal math and record their inputs and formula version.
 - **Private by default.** The database itself makes sure each user can only see their own data.
 - **The AI explains, it never trades.** Orders always need explicit confirmation from the user.
 - **No secrets in code.** API keys live in environment variables only.
 
 ## Tech stack
 
-- **Built with:** Next.js (App Router), TypeScript, Tailwind CSS, Supabase (Auth and PostgreSQL with row-level security), Vitest, GitHub Actions
+- **Built with:** Next.js (App Router), TypeScript, Tailwind CSS, Supabase (Auth and PostgreSQL with row-level security), decimal.js, Vitest, GitHub Actions
 - **Planned:** a market data provider, a paper-broker sandbox, Vercel hosting
 
 ## Getting started
@@ -100,9 +109,9 @@ These also run automatically on GitHub for every push.
 ```
 app/                   Pages, API routes, and server actions
 components/            UI components
-lib/                   Types, config, Supabase clients, data access, CSV parsing, and market data adapters
+lib/                   Types, config, Supabase clients, data access, portfolio math, and market data adapters
 supabase/migrations/   Database tables, functions, and row-level security policies
-docs/                  Scope, architecture, and security checks
+docs/                  Scope, architecture, calculations, and security checks
 public/                Static files, including the sample portfolio CSV
 proxy.ts               Refreshes sessions and protects every page
 ```

@@ -18,8 +18,8 @@ export default function Dashboard() {
         <Card title="Watchlist" className="md:col-span-2">
           <Watchlist />
         </Card>
-        <Card title="Portfolio">
-          <Suspense fallback={<p className="text-sm text-muted">Loading holdings…</p>}>
+        <Card title="Portfolio" className="md:col-span-2">
+          <Suspense fallback={<p className="text-sm text-muted">Loading your portfolio…</p>}>
             <HoldingsList />
           </Suspense>
           <ImportHoldingsForm />
@@ -29,7 +29,7 @@ export default function Dashboard() {
             No explanations yet. Each one will link to its sources.
           </p>
         </Card>
-        <Card title="Paper orders" className="md:col-span-2">
+        <Card title="Paper orders">
           <p className="text-sm text-muted">
             No paper orders yet. Every order will need your confirmation.
           </p>
