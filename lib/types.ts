@@ -81,3 +81,10 @@ export interface AuthState {
   error: string | null;
   message: string | null;
 }
+
+// What the CSV import form gets back after an upload
+export interface ImportState {
+  status: "idle" | "success" | "error";
+  message: string | null;
+  errors: { row: number; message: string }[];
+}

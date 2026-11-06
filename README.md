@@ -6,7 +6,7 @@ A web app for researching stocks, understanding portfolio risk, and placing **pa
 
 > **Paper trading only.** This project never places real orders or uses real money. Test data is always labeled as test data. Not financial advice.
 
-**Status:** In progress (week 1 of 8)
+**Status:** In progress. Currently building portfolio valuation and risk calculations.
 
 ## What it does
 
@@ -27,11 +27,27 @@ The goal is one complete, working journey:
 - [x] Automated tests and CI on every push
 - [x] Email sign-in with Supabase Auth, with every page protected
 - [x] Per-user data isolation with row-level security ([how it's tested](docs/isolation-check.md))
-- [ ] CSV portfolio import with row-by-row validation
+- [x] CSV portfolio import with row-by-row validation
 - [ ] Portfolio valuation and risk scenarios (decimal math, reproducible)
 - [ ] AI explanations with citations and uncertainty
 - [ ] Paper orders with explicit confirmation and duplicate prevention
 - [ ] Deployed on Vercel
+
+## Importing a portfolio
+
+Upload a CSV file from the Portfolio panel on the dashboard. A [sample file](public/sample-portfolio.csv) is included.
+
+```csv
+symbol,quantity,cost_basis
+AAPL,10,1500.00
+MSFT,5,1800.00
+```
+
+- **Required columns:** `symbol`, `quantity`, `cost_basis` (the total cost of the position). Common names like `ticker`, `shares`, and `Cost Basis` also work.
+- **Optional column:** `currency`, which must be USD.
+- **Cleanup:** symbols are uppercased and values like `$1,500.00` are accepted.
+- **Validation:** every invalid row is reported with its row number and how to fix it.
+- **All or nothing:** if any row is invalid, nothing is imported. A valid import replaces your current holdings in a single database transaction.
 
 ## Design principles
 
@@ -84,9 +100,10 @@ These also run automatically on GitHub for every push.
 ```
 app/                   Pages, API routes, and server actions
 components/            UI components
-lib/                   Types, config, Supabase clients, data access, and market data adapters
-supabase/migrations/   Database tables and row-level security policies
+lib/                   Types, config, Supabase clients, data access, CSV parsing, and market data adapters
+supabase/migrations/   Database tables, functions, and row-level security policies
 docs/                  Scope, architecture, and security checks
+public/                Static files, including the sample portfolio CSV
 proxy.ts               Refreshes sessions and protects every page
 ```
 

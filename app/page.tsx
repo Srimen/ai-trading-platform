@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import Card from "@/components/Card";
 import HoldingsList from "@/components/HoldingsList";
+import ImportHoldingsForm from "@/components/ImportHoldingsForm";
 import Watchlist from "@/components/Watchlist";
 
 export default function Dashboard() {
@@ -21,6 +22,7 @@ export default function Dashboard() {
           <Suspense fallback={<p className="text-sm text-muted">Loading holdings…</p>}>
             <HoldingsList />
           </Suspense>
+          <ImportHoldingsForm />
         </Card>
         <Card title="AI explanations">
           <p className="text-sm text-muted">
